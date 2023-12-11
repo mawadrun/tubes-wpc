@@ -1,5 +1,17 @@
-char incomingByte = 0;
-String msg = "";
+String serial_reader()
+{
+    char incomingByte = 0;
+    String msg = "";
+    while (Serial.available() <= 0)
+    {
+    }
+    while (Serial.available() > 0)
+    {
+        incomingByte = Serial.read();
+        msg += incomingByte;
+    }
+    return msg;
+}
 
 void setup()
 {
@@ -10,14 +22,5 @@ void setup()
 
 void loop()
 {
-    if (Serial.available() > 0)
-    {
-        incomingByte = Serial.read();
-        msg += incomingByte;
-        if (Serial.available() == 0)
-        {
-            Serial.println(msg.c_str());
-            msg = "";
-        }
-    }
+    Serial.println(serial_reader().c_str());
 }
