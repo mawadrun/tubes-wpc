@@ -1,17 +1,4 @@
-String serial_reader()
-{
-    char incomingByte = 0;
-    String msg = "";
-    while (Serial.available() <= 0)
-    {
-    }
-    while (Serial.available() > 0)
-    {
-        incomingByte = Serial.read();
-        msg += incomingByte;
-    }
-    return msg;
-}
+#include "utils.h"
 
 void setup()
 {
@@ -23,4 +10,5 @@ void setup()
 void loop()
 {
     Serial.println(serial_reader().c_str());
+    Serial.println(serial_reader("Bruh: ").c_str());
 }

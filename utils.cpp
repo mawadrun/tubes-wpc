@@ -1,3 +1,4 @@
+#include "utils.h"
 #include <WiFi.h>
 #include <PubSubClient.h>
 
@@ -64,4 +65,21 @@ void setup_mqtt()
             }
         }
     }
+}
+
+String serial_reader(char *prompt)
+{
+    char incomingByte = 0;
+    String msg = "";
+
+    Serial.print(prompt);
+    while (Serial.available() <= 0)
+    {
+    }
+    while (Serial.available() > 0)
+    {
+        incomingByte = Serial.read();
+        msg += incomingByte;
+    }
+    return msg;
 }
