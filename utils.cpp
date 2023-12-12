@@ -31,6 +31,7 @@ void setup_mqtt(char const *mode, PubSubClient &client, char const *mqtt_server,
     }
 
     client.setServer(mqtt_server, 1883);
+    client.setCallback(callback);
 
     randomSeed(micros());
 
@@ -60,6 +61,16 @@ void setup_mqtt(char const *mode, PubSubClient &client, char const *mqtt_server,
             }
         }
     }
+}
+
+void callback(char *topic, byte *payload, unsigned int length)
+{
+    Serial.print("<" + their_username + "> ");
+    for (int i = 0; i < length; i++)
+    {
+        Serial.print((char)payload[i]);
+    }
+    Serial.println();
 }
 
 String serial_reader(char *prompt)

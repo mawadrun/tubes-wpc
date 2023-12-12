@@ -26,14 +26,17 @@ void setup()
 
 void loop()
 {
-    send_msg = serial_reader();
-    if (!client.connected())
+    if (Serial.available() > 0)
     {
-        setup_mqtt("silent", client, mqtt_server, pub_topic.c_str(), sub_topic.c_str());
-    }
-    if (client.publish(pub_topic.c_str(), send_msg.c_str()))
-    {
-        Serial.println("<" + our_username + "> " + send_msg);
+        send_msg = serial_reader();
+        if (!client.connected())
+        {
+            setup_mqtt("silent", client, mqtt_server, pub_topic.c_str(), sub_topic.c_str());
+        }
+        if (client.publish(pub_topic.c_str(), send_msg.c_str()))
+        {
+            Serial.println("<" + our_username + "> " + send_msg);
+        }
     }
 
     client.loop();
