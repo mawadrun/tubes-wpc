@@ -7,6 +7,8 @@ const char *mqtt_server = "broker.mqtt-dashboard.com";
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+/*Semua string dibuat dengan class String, sehingga perlu dilakukan konversi
+menggunakan method c_str() ketika digunakan sebagai parameter fungsi MQTT */
 String our_username = "";
 String their_username = "";
 String pub_topic = "";
@@ -26,18 +28,18 @@ void setup()
 
 void loop()
 {
-    if (Serial.available() > 0)
+    if (Serial.available() > 0) // Hanya jika menerima input serial. Jika tidak begini, incoming message akan menunggu user mengirimkan pesan melalui serial.
     {
         send_msg = serial_reader();
-        if (!client.connected())
+        if (!client.connected()) // Antisipasi client ter-disconnect
         {
             setup_mqtt("silent", client, mqtt_server, pub_topic.c_str(), sub_topic.c_str());
         }
-        if (client.publish(pub_topic.c_str(), send_msg.c_str()))
+        if (client.publish(pub_topic.c_str(), send_msg.c_str())) // Kirim UI ke serial hanya jika publish message selesai
         {
             Serial.println("<" + our_username + "> " + send_msg);
         }
     }
 
-    client.loop();
+    client.loop(); // They say this is mandatory, idk
 }

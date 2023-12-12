@@ -6,7 +6,7 @@ void setup_wifi(char const *ssid, char const *password)
     Serial.print("Connecting to: ");
     Serial.print(ssid);
 
-    WiFi.mode(WIFI_STA);
+    WiFi.mode(WIFI_STA); // Station, as opposed to
     WiFi.begin(ssid, password);
 
     while (WiFi.status() != WL_CONNECTED)
@@ -24,7 +24,8 @@ void setup_wifi(char const *ssid, char const *password)
 
 void setup_mqtt(char const *mode, PubSubClient &client, char const *mqtt_server, char const *pub_topic, char const *sub_topic)
 {
-    if (mode == "normal")
+    // Parameter string di sini sudah bertipe const char*, sehingga tidak memerlukan konversi lagi
+    if (mode == "normal") // Saat mode silent, ini tidak di-print sehingga UI bersih
     {
         Serial.print("Connecting to ");
         Serial.println(mqtt_server);
@@ -79,7 +80,7 @@ String serial_reader(char *prompt)
     String msg = "";
 
     Serial.print(prompt);
-    while (Serial.available() <= 0)
+    while (Serial.available() <= 0) // Jangan lakukan apa-apa jika belum menerima input. Dibutuhkan pada input username di void setup()
     {
     }
     while (Serial.available() > 0)
