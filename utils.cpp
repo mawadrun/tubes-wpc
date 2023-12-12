@@ -22,10 +22,13 @@ void setup_wifi(char const *ssid, char const *password)
     Serial.println(WiFi.localIP());
 }
 
-void setup_mqtt(PubSubClient &client, char const *mqtt_server, char const *pub_topic, char const *sub_topic)
+void setup_mqtt(char const *mode, PubSubClient &client, char const *mqtt_server, char const *pub_topic, char const *sub_topic)
 {
-    Serial.print("Connecting to ");
-    Serial.println(mqtt_server);
+    if (mode == "normal")
+    {
+        Serial.print("Connecting to ");
+        Serial.println(mqtt_server);
+    }
 
     client.setServer(mqtt_server, 1883);
 
@@ -38,11 +41,15 @@ void setup_mqtt(PubSubClient &client, char const *mqtt_server, char const *pub_t
 
         if (client.connect(clientId.c_str()))
         {
-            Serial.println("Connected to MQTT server");
-            client.publish(pub_topic, "Device Connected: ");
-            client.publish(pub_topic, clientId.c_str());
+            if (mode == "normal")
+            {
+                Serial.println("Connected to MQTT server");
+                client.publish(pub_topic, "Device Connected: ");
+                client.publish(pub_topic, clientId.c_str());
+            }
+            client.subscribe(sub_topic);
         }
-        else
+        else if (mode == "normal")
         {
             Serial.print("Failed, rc=");
             Serial.print(client.state());

@@ -21,6 +21,7 @@ void setup()
     their_username = serial_reader("Enter your destination's username: ");
     sub_topic = (their_username + "/to/" + our_username);
     pub_topic = (our_username + "/to/" + their_username);
+    setup_mqtt("normal", client, mqtt_server, pub_topic.c_str(), sub_topic.c_str());
 }
 
 void loop()
@@ -28,9 +29,12 @@ void loop()
     send_msg = serial_reader();
     if (!client.connected())
     {
-        setup_mqtt(client, mqtt_server, pub_topic.c_str(), sub_topic.c_str());
+        setup_mqtt("silent", client, mqtt_server, pub_topic.c_str(), sub_topic.c_str());
     }
-    client.publish(pub_topic.c_str(), send_msg.c_str());
-    Serial.println("<" + our_username + "> " + send_msg);
+    if (client.publish(pub_topic.c_str(), send_msg.c_str()))
+    {
+        Serial.println("<" + our_username + "> " + send_msg);
+    }
+
     client.loop();
 }
