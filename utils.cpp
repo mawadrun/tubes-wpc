@@ -1,17 +1,6 @@
 #include "utils.h"
-#include <WiFi.h>
-#include <PubSubClient.h>
 
-const char *ssid = "Sukamentri";
-const char *password = "gggh5555";
-const char *mqtt_server = "broker.mqtt-dashboard.com";
-const char *pub_topic = "avalon";
-const char *sub_topic = "avalin";
-
-WiFiClient espClient;
-PubSubClient client(espClient);
-
-void setup_wifi()
+void setup_wifi(char const *ssid, char const *password)
 {
     Serial.println();
     Serial.print("Connecting to: ");
@@ -33,7 +22,7 @@ void setup_wifi()
     Serial.println(WiFi.localIP());
 }
 
-void setup_mqtt()
+void setup_mqtt(PubSubClient &client, char const *mqtt_server, char const *pub_topic, char const *sub_topic)
 {
     Serial.print("Connecting to ");
     Serial.println(mqtt_server);
@@ -52,7 +41,6 @@ void setup_mqtt()
             Serial.println("Connected to MQTT server");
             client.publish(pub_topic, "Device Connected: ");
             client.publish(pub_topic, clientId.c_str());
-            client.subscribe(sub_topic);
         }
         else
         {
@@ -60,7 +48,7 @@ void setup_mqtt()
             Serial.print(client.state());
             for (int i = 0; i < 5; i++)
             {
-                Serial.printf("Retrying in %d seconds", i);
+                Serial.printf("Retrying in %d seconds\n", i);
                 delay(1000);
             }
         }
